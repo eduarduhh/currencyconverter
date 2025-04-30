@@ -2,7 +2,7 @@ package br.com.eduarduhh.currencyconverter.service
 
 
 import br.com.eduarduhh.currencyconverter.client.ExchangeRatesClient
-import br.com.eduarduhh.currencyconverter.dto.ApiProperties
+import br.com.eduarduhh.currencyconverter.config.ApiProperties
 import br.com.eduarduhh.currencyconverter.exception.CurrencyConversionException
 import br.com.eduarduhh.currencyconverter.exception.CurrencyEnum
 import br.com.eduarduhh.currencyconverter.model.Transaction
@@ -33,7 +33,6 @@ class CurrencyService(
             ?: throw CurrencyConversionException(CurrencyEnum.INVALID_CURRENCY,"currency: $from")
         val toRate = response.rates[to.uppercase()]
             ?: throw CurrencyConversionException(CurrencyEnum.INVALID_CURRENCY,"currency: $to")
-
 
         val rate = toRate.divide(fromRate, 6, RoundingMode.HALF_UP)
         val result = amount.multiply(rate).setScale(2, RoundingMode.HALF_UP)

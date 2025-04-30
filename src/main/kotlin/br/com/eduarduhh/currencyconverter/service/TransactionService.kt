@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service
 class TransactionService (
     private val transactionRepository: TransactionRepository
 ){
-
     fun findAllByUserId (id: Long): List<Transaction> {
 
         var findAllByUserId = transactionRepository.findAllByUserId(id)

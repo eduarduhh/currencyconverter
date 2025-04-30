@@ -28,8 +28,7 @@ repositories {
 extra["springCloudVersion"] = "2024.0.1"
 
 dependencies {
-	//implementation("org.hibernate.validator:hibernate-validator:7.0.4")  // Use a versão mais recente
-	implementation("jakarta.validation:jakarta.validation-api:3.0.0")  // Use a versão mais recente
+
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	runtimeOnly("com.h2database:h2")
@@ -41,7 +40,9 @@ dependencies {
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.springframework.boot:spring-boot-configuration-processor")
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("jakarta.validation:jakarta.validation-api:3.0.2")
+
 
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")

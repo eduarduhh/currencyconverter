@@ -1,6 +1,5 @@
 package br.com.eduarduhh.currencyconverter.repository
 
-
 import br.com.eduarduhh.currencyconverter.model.Transaction
 import org.springframework.data.jpa.repository.JpaRepository
 

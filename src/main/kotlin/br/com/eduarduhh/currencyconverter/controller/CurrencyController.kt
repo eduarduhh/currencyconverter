@@ -4,6 +4,7 @@ import br.com.eduarduhh.currencyconverter.model.Transaction
 import br.com.eduarduhh.currencyconverter.service.CurrencyService
 import br.com.eduarduhh.currencyconverter.dto.ConversionRequest
 import jakarta.validation.Valid
+
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

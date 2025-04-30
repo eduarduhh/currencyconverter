@@ -1,7 +1,7 @@
 package br.com.eduarduhh.currencyconverter.service
 
 import br.com.eduarduhh.currencyconverter.client.ExchangeRatesClient
-import br.com.eduarduhh.currencyconverter.dto.ApiProperties
+import br.com.eduarduhh.currencyconverter.config.ApiProperties
 import br.com.eduarduhh.currencyconverter.dto.ExchangeRatesResponse
 import br.com.eduarduhh.currencyconverter.exception.CurrencyConversionException
 import br.com.eduarduhh.currencyconverter.exception.CurrencyEnum

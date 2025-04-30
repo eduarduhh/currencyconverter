@@ -1,4 +1,4 @@
-package br.com.eduarduhh.currencyconverter.dto
+package br.com.eduarduhh.currencyconverter.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.ConstructorBinding

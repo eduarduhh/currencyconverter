@@ -1,6 +1,6 @@
 package br.com.eduarduhh.currencyconverter
 
-import br.com.eduarduhh.currencyconverter.dto.ApiProperties
+import br.com.eduarduhh.currencyconverter.config.ApiProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
