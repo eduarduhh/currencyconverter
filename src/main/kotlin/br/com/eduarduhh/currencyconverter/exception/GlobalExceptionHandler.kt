@@ -1,15 +1,18 @@
 package br.com.eduarduhh.currencyconverter.exception
 
 import br.com.eduarduhh.currencyconverter.dto.ApiError
+import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.RestControllerAdvice
 import java.time.LocalDateTime
 
-@ControllerAdvice
-class GlobalExceptionHandler {
+@RestControllerAdvice
+@Hidden
+class GlobalExceptionHandler  {
 
 
     @ExceptionHandler(CurrencyConversionException::class)

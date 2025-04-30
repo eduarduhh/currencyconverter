@@ -19,7 +19,7 @@ spring:
 api:
   url:
   base: EUR
-  key: ef9bbd347f75a9eda6dd95df878d9732
+  key:
 
 server:
   error:

@@ -2,6 +2,7 @@ package br.com.eduarduhh.currencyconverter.service
 
 
 import br.com.eduarduhh.currencyconverter.client.ExchangeRatesClient
+import br.com.eduarduhh.currencyconverter.dto.ApiProperties
 import br.com.eduarduhh.currencyconverter.exception.CurrencyConversionException
 import br.com.eduarduhh.currencyconverter.exception.CurrencyEnum
 import br.com.eduarduhh.currencyconverter.model.Transaction
@@ -16,11 +17,9 @@ import java.math.RoundingMode
 class CurrencyService(
     private val transactionRepository: TransactionRepository,
     private val exchangeRatesClient: ExchangeRatesClient,
-    private val userRepository: UserRepository
-    //private val apiProperties: ApiProperties
+    private val userRepository: UserRepository,
+    private val apiProperties: ApiProperties
 ) {
-
-
 
     fun convertCurrency(userId: Long, from: String, to: String, amount: BigDecimal): Transaction {
 
@@ -28,8 +27,7 @@ class CurrencyService(
             .orElseThrow { CurrencyConversionException(CurrencyEnum.USER_NOT_FOUND,
                 "User ID $userId not found") }
 
-       // val response = exchangeRatesClient.getLatestRates( apiProperties.base,apiProperties.key)
-        val response = exchangeRatesClient.getLatestRates( "a","a")
+        val response = exchangeRatesClient.getLatestRates( apiProperties.base,apiProperties.key)
 
         val fromRate = response.rates[from.uppercase()]
             ?: throw CurrencyConversionException(CurrencyEnum.INVALID_CURRENCY,"currency: $from")
@@ -48,9 +46,7 @@ class CurrencyService(
             toAmount = result,
             conversionRate = rate
         )
-
         return transactionRepository.save(transaction)
-
     }
 }
 

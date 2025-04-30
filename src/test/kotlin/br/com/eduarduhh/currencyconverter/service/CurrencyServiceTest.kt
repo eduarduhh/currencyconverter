@@ -1,6 +1,7 @@
 package br.com.eduarduhh.currencyconverter.service
 
 import br.com.eduarduhh.currencyconverter.client.ExchangeRatesClient
+import br.com.eduarduhh.currencyconverter.dto.ApiProperties
 import br.com.eduarduhh.currencyconverter.dto.ExchangeRatesResponse
 import br.com.eduarduhh.currencyconverter.exception.CurrencyConversionException
 import br.com.eduarduhh.currencyconverter.exception.CurrencyEnum
@@ -42,14 +43,14 @@ class CurrencyServiceTest {
     private val toCurrency = "BRL"
     private val amount = BigDecimal("100.00")
 
-    //private val testProperties = ApiProperties(base = base, key = apiKey)
+    private val testProperties = ApiProperties(base = base, key = apiKey)
     @BeforeEach
     fun setUp() {
         currencyService = CurrencyService(
             transactionRepository = transactionRepository,
             exchangeRatesClient = exchangeRatesClient,
-            userRepository = userRepository
-           // apiProperties = testProperties,
+            userRepository = userRepository,
+            apiProperties = testProperties
         )
     }
     //bem sucedida
