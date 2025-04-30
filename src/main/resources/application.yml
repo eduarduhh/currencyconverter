@@ -16,8 +16,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
 api:
   url:
-  endpoint:
-  key: 2695a341d73349c3a1492d86b31e7a82
+  base: EUR
+  key: ef9bbd347f75a9eda6dd95df878d9732
+
+server:
+  error:
+    include-message: always
+    include-stacktrace: on_param
+  port: 8080

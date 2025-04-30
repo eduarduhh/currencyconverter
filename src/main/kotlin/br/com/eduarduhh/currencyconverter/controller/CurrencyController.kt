@@ -1,8 +1,8 @@
-package br.com.eduarduhh.demo.controller
+package br.com.eduarduhh.currencyconverter.controller
 
-import br.com.eduarduhh.demo.model.Transaction
-import br.com.eduarduhh.demo.service.CurrencyService
-import dto.ConversionRequest
+import br.com.eduarduhh.currencyconverter.model.Transaction
+import br.com.eduarduhh.currencyconverter.service.CurrencyService
+import br.com.eduarduhh.currencyconverter.dto.ConversionRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/currency")
 class CurrencyController(
     private val currencyService: CurrencyService
 ) {
@@ -26,10 +26,4 @@ class CurrencyController(
         )
         return ResponseEntity.ok(result)
     }
-
-   // @GetMapping("/transactions/{userId}")
-   // fun getUserTransactions(@PathVariable userId: Long): ResponseEntity<List<Transaction>> {
-   //     val transactions = currencyService.getUserTransactions(userId)
-   //     return ResponseEntity.ok(transactions)
-   // }
 }

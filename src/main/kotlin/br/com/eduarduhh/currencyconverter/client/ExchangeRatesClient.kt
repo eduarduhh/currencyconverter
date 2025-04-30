@@ -1,6 +1,6 @@
-package br.com.eduarduhh.demo.client
+package br.com.eduarduhh.currencyconverter.client
 
-import dto.ExchangeRatesResponse
+import br.com.eduarduhh.currencyconverter.dto.ExchangeRatesResponse
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam
 interface ExchangeRatesClient {
 
     @GetMapping("/latest")
-    fun getRates(
-        @RequestParam("base") base: String = "EUR",
-        @RequestParam("access_key") accessKey: String = "9e301f518041deb8988ff18b1b3a3f61"
+    fun getLatestRates(
+        @RequestParam("base") base: String ,
+        @RequestParam("access_key") accessKey: String
     ): ExchangeRatesResponse
 }

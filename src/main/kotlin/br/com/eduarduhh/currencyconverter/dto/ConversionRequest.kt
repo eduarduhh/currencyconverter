@@ -1,4 +1,4 @@
-package dto
+package br.com.eduarduhh.currencyconverter.dto
 
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank

@@ -1,4 +1,4 @@
-package br.com.eduarduhh.demo.model
+package br.com.eduarduhh.currencyconverter.model
 
 
 import jakarta.persistence.*

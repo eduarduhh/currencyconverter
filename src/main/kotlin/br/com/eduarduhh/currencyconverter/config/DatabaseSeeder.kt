@@ -1,7 +1,7 @@
-package br.com.eduarduhh.demo.config
+package br.com.eduarduhh.currencyconverter.config
 
-import br.com.eduarduhh.demo.model.User
-import br.com.eduarduhh.demo.repository.UserRepository
+import br.com.eduarduhh.currencyconverter.model.User
+import br.com.eduarduhh.currencyconverter.repository.UserRepository
 import jakarta.annotation.PostConstruct
 import org.springframework.stereotype.Component
 

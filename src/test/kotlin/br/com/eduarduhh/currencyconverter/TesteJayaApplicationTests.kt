@@ -1,4 +1,4 @@
-package br.com.eduarduhh.demo
+package br.com.eduarduhh.currencyconverter
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

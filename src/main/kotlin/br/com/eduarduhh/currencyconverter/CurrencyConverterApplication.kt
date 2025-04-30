@@ -1,10 +1,11 @@
-package br.com.eduarduhh.demo
+package br.com.eduarduhh.currencyconverter
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.cloud.openfeign.EnableFeignClients
 
-@EnableFeignClients(basePackages = ["br.com.eduarduhh.demo.client"])
+@EnableFeignClients(basePackages = ["br.com.eduarduhh.currencyconverter.client"])
 @SpringBootApplication
 class TesteJayaApplication
 
