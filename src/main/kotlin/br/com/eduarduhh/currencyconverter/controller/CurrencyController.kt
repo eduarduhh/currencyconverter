@@ -20,10 +20,10 @@ class CurrencyController(
     @PostMapping("/convert")
     fun convert(@RequestBody @Valid request: ConversionRequest): ResponseEntity<Transaction> {
         val result = currencyService.convertCurrency(
-            request.userId!!,
+            request.userId,
             request.fromCurrency,
             request.toCurrency,
-            request.amount!!
+            request.amount
         )
         return ResponseEntity.ok(result)
     }

@@ -21,8 +21,7 @@ api:
   base: EUR
   key:
 
-server:
-  error:
-    include-message: always
-    include-stacktrace: on_param
-  port: 8080
+logging:
+  level:
+    root: INFO
+    br.com.eduarduhh: DEBUG

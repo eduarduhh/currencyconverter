@@ -8,6 +8,7 @@ import br.com.eduarduhh.currencyconverter.exception.CurrencyEnum
 import br.com.eduarduhh.currencyconverter.model.Transaction
 import br.com.eduarduhh.currencyconverter.repository.TransactionRepository
 import br.com.eduarduhh.currencyconverter.repository.UserRepository
+import br.com.eduarduhh.currencyconverter.util.log
 
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -21,7 +22,11 @@ class CurrencyService(
     private val apiProperties: ApiProperties
 ) {
 
+    private val log = log()
+
     fun convertCurrency(userId: Long, from: String, to: String, amount: BigDecimal): Transaction {
+
+        log.info("Convertendo valor: $amount") // Log simples
 
         val user = userRepository.findById(userId)
             .orElseThrow { CurrencyConversionException(CurrencyEnum.USER_NOT_FOUND,

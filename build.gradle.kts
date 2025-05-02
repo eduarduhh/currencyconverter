@@ -43,6 +43,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("jakarta.validation:jakarta.validation-api:3.0.2")
 
+	testImplementation("io.mockk:mockk:1.13.9") // ou a versão mais recente
 
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")

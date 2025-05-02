@@ -1,6 +1,7 @@
 package br.com.eduarduhh.currencyconverter.exception
 
 import br.com.eduarduhh.currencyconverter.dto.ApiError
+import br.com.eduarduhh.currencyconverter.util.log
 import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.dao.DataIntegrityViolationException
@@ -15,15 +16,21 @@ import java.time.LocalDateTime
 @RestControllerAdvice
 @Hidden
 class GlobalExceptionHandler {
+    private val log = log()
+
+
 
     @ExceptionHandler(CurrencyConversionException::class)
     fun handleCurrencyError(
         ex: CurrencyConversionException,
         request: HttpServletRequest
     ): ResponseEntity<ApiError> {
+
+        log.info("Erro de negocio ${ex}")
+
         return buildResponse(
             status = ex.currencyEnum.httpStatus,
-            message = ex.message ?: ex.currencyEnum.message,
+            message = ex.message,
             path = request.requestURI,
             errorType = ex.currencyEnum.name
         )
@@ -37,6 +44,8 @@ class GlobalExceptionHandler {
         val errors = ex.bindingResult.fieldErrors.associate { error ->
             error.field to (error.defaultMessage ?: "Erro de validação")
         }
+
+        log.info("Erro de validação ${ex}")
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
             ApiError(
@@ -88,6 +97,9 @@ class GlobalExceptionHandler {
             path = request.requestURI,
             errorType = "INTERNAL_SERVER_ERROR"
         )
+
+        log.error("Erro interno não tratado: ${ex.message}", ex)
+
     }
 
     private fun buildResponse(
