@@ -65,7 +65,7 @@ br.com.eduarduhh.currencyconverter
 
 1. Clone o repositório:
    \`\`\`bash
-   git clone https://github.com/seu-usuario/currencyconverter.git
+   git clone https://github.com/eduarduhh/currencyconverter.git
    cd currencyconverter
    \`\`\`
 

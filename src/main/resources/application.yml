@@ -17,11 +17,12 @@ spring:
       hibernate:
         format_sql: true
 api:
-  url:
+  url: https://api.exchangeratesapi.io
+  endpoint: /latest
   base: EUR
-  key:
+  key: ${API_KEY} # carregada do Railway ou .env
 
 logging:
   level:
     root: INFO
-    br.com.eduarduhh: DEBUG
+    #br.com.eduarduhh: DEBUG
