@@ -71,9 +71,25 @@ allOpen {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
 java {
 	toolchain {
 		languageVersion.set(JavaLanguageVersion.of(21))
 	}
+}
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+	kotlinOptions {
+		jvmTarget = "21"
+		freeCompilerArgs = listOf("-Xjsr305=strict")
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation(kotlin("stdlib-jdk8"))
+	// Suas outras dependências aqui
 }
 
