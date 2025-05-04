@@ -28,6 +28,6 @@ jobs:
         run: ./gradlew build
 
       - name: Deploy no Railway
-        uses: railwayapp/cli-action@v1
+        uses: railwayapp/railway-action@v1.2.5
         with:
           railwayToken: ${{ secrets.RAILWAY_TOKEN }}
