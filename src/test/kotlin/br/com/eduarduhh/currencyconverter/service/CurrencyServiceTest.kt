@@ -23,7 +23,6 @@ import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 class CurrencyServiceTest {
-
     @Mock
     private lateinit var transactionRepository: TransactionRepository
 
@@ -44,42 +43,47 @@ class CurrencyServiceTest {
     private val amount = BigDecimal("100.00")
 
     private val testProperties = ApiProperties(base = base, key = apiKey)
+
     @BeforeEach
     fun setUp() {
-        currencyService = CurrencyService(
-            transactionRepository = transactionRepository,
-            exchangeRatesClient = exchangeRatesClient,
-            userRepository = userRepository,
-            apiProperties = testProperties
-        )
+        currencyService =
+            CurrencyService(
+                transactionRepository = transactionRepository,
+                exchangeRatesClient = exchangeRatesClient,
+                userRepository = userRepository,
+                apiProperties = testProperties,
+            )
     }
-    //bem sucedida
+
+    // bem sucedida
     @Test
     fun `convertCurrency should return transaction when conversion is successful`() {
         // Given
         val user = User(id = userId, name = "Test User")
 
         val rates = mapOf("BRL" to BigDecimal("6.402883"), "USD" to BigDecimal("1.13908"))
-        val testResponse = ExchangeRatesResponse(
-            success = true,
-            timestamp = 1745964554,
-            base = "EUR",
-            date = "2025-04-29",
-            rates = rates
-        )
+        val testResponse =
+            ExchangeRatesResponse(
+                success = true,
+                timestamp = 1745964554,
+                base = "EUR",
+                date = "2025-04-29",
+                rates = rates,
+            )
 
-        val expectedTransaction = Transaction(
-            id= 1L,
-            userId = userId,
-            fromCurrency = fromCurrency,
-            fromAmount = amount,
-            toCurrency = toCurrency,
-            toAmount = BigDecimal("500.00"),
-            conversionRate = BigDecimal("5.0")
-        )
+        val expectedTransaction =
+            Transaction(
+                id = 1L,
+                userId = userId,
+                fromCurrency = fromCurrency,
+                fromAmount = amount,
+                toCurrency = toCurrency,
+                toAmount = BigDecimal("500.00"),
+                conversionRate = BigDecimal("5.0"),
+            )
 
         whenever(userRepository.findById(userId)).thenReturn(Optional.of(user))
-        whenever(exchangeRatesClient.getLatestRates(any(),any())).thenReturn(testResponse)
+        whenever(exchangeRatesClient.getLatestRates(any(), any())).thenReturn(testResponse)
         whenever(transactionRepository.save(any<Transaction>())).thenReturn(expectedTransaction)
 
         // When
@@ -105,16 +109,18 @@ class CurrencyServiceTest {
         assertEquals(fromCurrency, savedTransaction.fromCurrency)
         assertEquals(toCurrency, savedTransaction.toCurrency)
     }
-    //usuario nao encontrado
+
+    // usuario nao encontrado
     @Test
     fun `convertCurrency should throw exception when user not found`() {
         // Given
         whenever(userRepository.findById(userId)).thenReturn(Optional.empty())
 
         // When / Then
-        val exception = assertThrows<CurrencyConversionException> {
-            currencyService.convertCurrency(userId, fromCurrency, toCurrency, amount)
-        }
+        val exception =
+            assertThrows<CurrencyConversionException> {
+                currencyService.convertCurrency(userId, fromCurrency, toCurrency, amount)
+            }
 
         assertEquals(CurrencyEnum.USER_NOT_FOUND, exception.currencyEnum)
         assertEquals("User ID $userId not found", exception.message)
@@ -123,6 +129,7 @@ class CurrencyServiceTest {
         verifyNoInteractions(exchangeRatesClient)
         verifyNoInteractions(transactionRepository)
     }
+
     // moeda invalida
     @Test
     fun `convertCurrency should throw exception when from currency is invalid`() {
@@ -131,21 +138,23 @@ class CurrencyServiceTest {
         val invalidCurrency = "INVALID"
 
         val rates = mapOf("BRL" to BigDecimal(6.402883), "USD" to BigDecimal(1.13908))
-        val testResponse = ExchangeRatesResponse(
-            success = true,
-            timestamp = 1745964554,
-            base = "EUR",
-            date = "2025-04-29",
-            rates = rates
-        )
+        val testResponse =
+            ExchangeRatesResponse(
+                success = true,
+                timestamp = 1745964554,
+                base = "EUR",
+                date = "2025-04-29",
+                rates = rates,
+            )
 
         whenever(userRepository.findById(userId)).thenReturn(Optional.of(user))
         whenever(exchangeRatesClient.getLatestRates(base, apiKey)).thenReturn(testResponse)
 
         // When / Then
-        val exception = assertThrows<CurrencyConversionException> {
-            currencyService.convertCurrency(userId, invalidCurrency, toCurrency, amount)
-        }
+        val exception =
+            assertThrows<CurrencyConversionException> {
+                currencyService.convertCurrency(userId, invalidCurrency, toCurrency, amount)
+            }
 
         assertEquals(CurrencyEnum.INVALID_CURRENCY, exception.currencyEnum)
         assertEquals("currency: $invalidCurrency", exception.message)
@@ -154,6 +163,7 @@ class CurrencyServiceTest {
         verify(exchangeRatesClient).getLatestRates(base, apiKey)
         verifyNoInteractions(transactionRepository)
     }
+
     // moenda from invalida
     @Test
     fun `convertCurrency should throw exception when to currency is invalid`() {
@@ -162,21 +172,23 @@ class CurrencyServiceTest {
         val invalidCurrency = "INVALID"
 
         val rates = mapOf("BRL" to BigDecimal(6.402883), "USD" to BigDecimal(1.13908))
-        val testResponse = ExchangeRatesResponse(
-            success = true,
-            timestamp = 1745964554,
-            base = "EUR",
-            date = "2025-04-29",
-            rates = rates
-        )
+        val testResponse =
+            ExchangeRatesResponse(
+                success = true,
+                timestamp = 1745964554,
+                base = "EUR",
+                date = "2025-04-29",
+                rates = rates,
+            )
 
         whenever(userRepository.findById(userId)).thenReturn(Optional.of(user))
         whenever(exchangeRatesClient.getLatestRates(base, apiKey)).thenReturn(testResponse)
 
         // When / Then
-        val exception = assertThrows<CurrencyConversionException> {
-            currencyService.convertCurrency(userId, fromCurrency, invalidCurrency, amount)
-        }
+        val exception =
+            assertThrows<CurrencyConversionException> {
+                currencyService.convertCurrency(userId, fromCurrency, invalidCurrency, amount)
+            }
 
         assertEquals(CurrencyEnum.INVALID_CURRENCY, exception.currencyEnum)
         assertEquals("currency: $invalidCurrency", exception.message)
@@ -191,15 +203,15 @@ class CurrencyServiceTest {
         // Given
         val user = User(id = userId, name = "Test User")
 
-
         val rates = mapOf("BRL" to BigDecimal(6.402883), "USD" to BigDecimal(1.13908))
-        val testResponse = ExchangeRatesResponse(
-            success = true,
-            timestamp = 1745964554,
-            base = "EUR",
-            date = "2025-04-29",
-            rates = rates
-        )
+        val testResponse =
+            ExchangeRatesResponse(
+                success = true,
+                timestamp = 1745964554,
+                base = "EUR",
+                date = "2025-04-29",
+                rates = rates,
+            )
 
         whenever(userRepository.findById(userId)).thenReturn(Optional.of(user))
         whenever(exchangeRatesClient.getLatestRates(base, apiKey)).thenReturn(testResponse)

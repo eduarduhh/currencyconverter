@@ -7,18 +7,18 @@ import org.springframework.stereotype.Component
 
 @Component
 class DatabaseSeeder(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
-
     @PostConstruct
     fun seed() {
         if (userRepository.count() == 0L) {
-            val users = listOf(
-                User(name = "Alice"),
-                User(name = "Bob"),
-                User(name = "Carol"),
-                User(name = "Eduardo")
-            )
+            val users =
+                listOf(
+                    User(name = "Alice"),
+                    User(name = "Bob"),
+                    User(name = "Carol"),
+                    User(name = "Eduardo"),
+                )
             userRepository.saveAll(users)
         }
     }

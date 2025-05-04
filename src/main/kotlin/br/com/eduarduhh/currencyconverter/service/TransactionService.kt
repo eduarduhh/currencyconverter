@@ -8,20 +8,20 @@ import br.com.eduarduhh.currencyconverter.util.log
 import org.springframework.stereotype.Service
 
 @Service
-class TransactionService (
-    private val transactionRepository: TransactionRepository
-){
+class TransactionService(
+    private val transactionRepository: TransactionRepository,
+) {
     private val log = log()
 
-    fun findAllByUserId (id: Long): List<Transaction> {
-
+    fun findAllByUserId(id: Long): List<Transaction> {
         log.info("Buscando transacoes: $id")
 
         var findAllByUserId = transactionRepository.findAllByUserId(id)
-        if(findAllByUserId.isEmpty()){
-            log.info("Id do usuário: $id não possue transação")
-            throw CurrencyConversionException(CurrencyEnum.TRANSACTION_NOT_FOUND, "Transaction not found user id : $id")
-        }
+        if (findAllByUserId.isEmpty())
+            {
+                log.info("Id do usuário: $id não possue transação")
+                throw CurrencyConversionException(CurrencyEnum.TRANSACTION_NOT_FOUND, "Transaction not found user id : $id")
+            }
 
         return findAllByUserId
     }

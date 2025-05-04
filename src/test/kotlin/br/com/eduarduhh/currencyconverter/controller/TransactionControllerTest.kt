@@ -1,14 +1,11 @@
 package br.com.eduarduhh.currencyconverter.controller
 
-import org.springframework.beans.factory.annotation.Autowired
-
-
 import br.com.eduarduhh.currencyconverter.model.Transaction
 import br.com.eduarduhh.currencyconverter.service.TransactionService
-
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
@@ -21,10 +18,11 @@ import java.time.LocalDateTime
 
 @WebMvcTest(TransactionController::class)
 @Import(TransactionControllerTest.MockConfig::class)
-class TransactionControllerTest{
+class TransactionControllerTest {
 
     @Autowired
     private lateinit var mockMvc: MockMvc
+
     @Autowired
     private lateinit var transactionService: TransactionService
 
@@ -37,18 +35,19 @@ class TransactionControllerTest{
     @Test
     fun `should return 200 and list of transactions`() {
         // given
-        val transactions = listOf(
-            Transaction(
-                id = 1,
-                userId = 1,
-                fromCurrency = "BRL",
-                fromAmount = BigDecimal("100.00"),
-                toCurrency = "USD",
-                toAmount = BigDecimal("20.00"),
-                conversionRate = BigDecimal("0.2"),
-                timestamp = LocalDateTime.now()
+        val transactions =
+            listOf(
+                Transaction(
+                    id = 1,
+                    userId = 1,
+                    fromCurrency = "BRL",
+                    fromAmount = BigDecimal("100.00"),
+                    toCurrency = "USD",
+                    toAmount = BigDecimal("20.00"),
+                    conversionRate = BigDecimal("0.2"),
+                    timestamp = LocalDateTime.now(),
+                ),
             )
-        )
 
         every { transactionService.findAllByUserId(1L) } returns transactions
 

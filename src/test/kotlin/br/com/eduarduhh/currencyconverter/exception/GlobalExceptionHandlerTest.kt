@@ -1,22 +1,21 @@
 package br.com.eduarduhh.currencyconverter.exception
 
-
 import io.mockk.every
 import io.mockk.mockk
+import jakarta.servlet.http.HttpServletRequest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.MethodArgumentNotValidException
-import jakarta.servlet.http.HttpServletRequest
-import org.springframework.beans.factory.annotation.Autowired
 import java.sql.SQLException
-
 
 class GlobalExceptionHandlerTest {
     @Autowired
     private lateinit var handler: GlobalExceptionHandler
+
     @Autowired
     private lateinit var request: HttpServletRequest
 
@@ -29,10 +28,11 @@ class GlobalExceptionHandlerTest {
 
     @Test
     fun `handleCurrencyError should return proper response`() {
-        val ex = CurrencyConversionException(
-            message = "Invalid currency",
-            currencyEnum = CurrencyEnum.INVALID_CURRENCY
-        )
+        val ex =
+            CurrencyConversionException(
+                message = "Invalid currency",
+                currencyEnum = CurrencyEnum.INVALID_CURRENCY,
+            )
 
         val response = handler.handleCurrencyError(ex, request)
 

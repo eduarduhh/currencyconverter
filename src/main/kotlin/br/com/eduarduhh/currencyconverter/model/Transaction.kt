@@ -15,5 +15,5 @@ data class Transaction(
     val toCurrency: String,
     val toAmount: BigDecimal,
     val conversionRate: BigDecimal,
-    val timestamp: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
+    val timestamp: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
 )

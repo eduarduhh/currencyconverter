@@ -18,34 +18,32 @@ import java.time.LocalDateTime
 class GlobalExceptionHandler {
     private val log = log()
 
-
-
     @ExceptionHandler(CurrencyConversionException::class)
     fun handleCurrencyError(
         ex: CurrencyConversionException,
-        request: HttpServletRequest
+        request: HttpServletRequest,
     ): ResponseEntity<ApiError> {
-
-        log.info("Erro de negocio ${ex}")
+        log.info("Erro de negocio $ex")
 
         return buildResponse(
             status = ex.currencyEnum.httpStatus,
             message = ex.message,
             path = request.requestURI,
-            errorType = ex.currencyEnum.name
+            errorType = ex.currencyEnum.name,
         )
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationExceptions(
         ex: MethodArgumentNotValidException,
-        request: HttpServletRequest
+        request: HttpServletRequest,
     ): ResponseEntity<ApiError> {
-        val errors = ex.bindingResult.fieldErrors.associate { error ->
-            error.field to (error.defaultMessage ?: "Erro de validação")
-        }
+        val errors =
+            ex.bindingResult.fieldErrors.associate { error ->
+                error.field to (error.defaultMessage ?: "Erro de validação")
+            }
 
-        log.info("Erro de validação ${ex}")
+        log.info("Erro de validação $ex")
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
             ApiError(
@@ -54,68 +52,70 @@ class GlobalExceptionHandler {
                 error = "Erro de validação",
                 message = "Dados de entrada inválidos",
                 path = request.requestURI,
-                details = errors
-            )
+                details = errors,
+            ),
         )
     }
+
     @ExceptionHandler(DataIntegrityViolationException::class)
     fun handleDataIntegrityViolation(
         ex: DataIntegrityViolationException,
-        request: HttpServletRequest
+        request: HttpServletRequest,
     ): ResponseEntity<ApiError> {
-        val (status, message) = when (val rootCause = ex.rootCause) {
-            is SQLException -> {
-                when {
-                    rootCause.message?.contains("unique constraint") == true ->
-                        HttpStatus.CONFLICT to "Violação de constraint única: registro duplicado"
-                    rootCause.message?.contains("foreign key constraint") == true ->
-                        HttpStatus.BAD_REQUEST to "Violação de chave estrangeira: referência inválida"
-                    rootCause.message?.contains("not-null constraint") == true ->
-                        HttpStatus.BAD_REQUEST to "Campo obrigatório não informado"
-                    else -> HttpStatus.BAD_REQUEST to "Erro de integridade de dados"
+        val (status, message) =
+            when (val rootCause = ex.rootCause) {
+                is SQLException -> {
+                    when {
+                        rootCause.message?.contains("unique constraint") == true ->
+                            HttpStatus.CONFLICT to "Violação de constraint única: registro duplicado"
+                        rootCause.message?.contains("foreign key constraint") == true ->
+                            HttpStatus.BAD_REQUEST to "Violação de chave estrangeira: referência inválida"
+                        rootCause.message?.contains("not-null constraint") == true ->
+                            HttpStatus.BAD_REQUEST to "Campo obrigatório não informado"
+                        else -> HttpStatus.BAD_REQUEST to "Erro de integridade de dados"
+                    }
                 }
+                else -> HttpStatus.BAD_REQUEST to "Erro na operação com o banco de dados"
             }
-            else -> HttpStatus.BAD_REQUEST to "Erro na operação com o banco de dados"
-        }
 
         return buildResponse(
             status = status,
             message = message,
             path = request.requestURI,
-            errorType = "DATA_INTEGRITY_VIOLATION"
+            errorType = "DATA_INTEGRITY_VIOLATION",
         )
     }
 
     @ExceptionHandler(Exception::class)
     fun handleGenericError(
         ex: Exception,
-        request: HttpServletRequest
+        request: HttpServletRequest,
     ): ResponseEntity<ApiError> {
         return buildResponse(
             status = HttpStatus.INTERNAL_SERVER_ERROR,
             message = "Erro interno no servidor",
             path = request.requestURI,
-            errorType = "INTERNAL_SERVER_ERROR"
+            errorType = "INTERNAL_SERVER_ERROR",
         )
 
         log.error("Erro interno não tratado: ${ex.message}", ex)
-
     }
 
     private fun buildResponse(
         status: HttpStatus,
         message: String?,
         path: String,
-        errorType: String? = null
+        errorType: String? = null,
     ): ResponseEntity<ApiError> {
-        val error = ApiError(
-            timestamp = LocalDateTime.now(),
-            status = status.value(),
-            error = status.reasonPhrase,
-            message = message,
-            path = path,
-            errorType = errorType
-        )
+        val error =
+            ApiError(
+                timestamp = LocalDateTime.now(),
+                status = status.value(),
+                error = status.reasonPhrase,
+                message = message,
+                path = path,
+                errorType = errorType,
+            )
         return ResponseEntity(error, status)
     }
 }

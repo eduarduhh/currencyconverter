@@ -3,9 +3,6 @@ package br.com.eduarduhh.currencyconverter.controller
 import br.com.eduarduhh.currencyconverter.dto.ConversionRequest
 import br.com.eduarduhh.currencyconverter.model.Transaction
 import br.com.eduarduhh.currencyconverter.service.CurrencyService
-import org.mockito.Mock
-
-
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.mockk.every
 import io.mockk.mockk
@@ -23,11 +20,10 @@ import java.time.LocalDateTime
 
 @WebMvcTest(CurrencyController::class)
 @Import(CurrencyControllerTest.MockConfig::class)
-
 class CurrencyControllerTest {
-
     @Autowired
     private lateinit var mockMvc: MockMvc
+
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
@@ -43,26 +39,27 @@ class CurrencyControllerTest {
     @Test
     fun `should return 200 and transaction when converting currency`() {
         // given
-        val request = ConversionRequest(
-            userId = 1,
-            fromCurrency = "BRL",
-            toCurrency = "USD",
-            amount = BigDecimal("100.00")
-        )
+        val request =
+            ConversionRequest(
+                userId = 1,
+                fromCurrency = "BRL",
+                toCurrency = "USD",
+                amount = BigDecimal("100.00"),
+            )
 
-        val transaction = Transaction(
-            id = 1,
-            userId = 1,
-            fromCurrency = "BRL",
-            fromAmount = BigDecimal("100.00"),
-            toCurrency = "USD",
-            toAmount = BigDecimal("20.00"),
-            conversionRate = BigDecimal("0.2"),
-            timestamp = LocalDateTime.now()
-        )
+        val transaction =
+            Transaction(
+                id = 1,
+                userId = 1,
+                fromCurrency = "BRL",
+                fromAmount = BigDecimal("100.00"),
+                toCurrency = "USD",
+                toAmount = BigDecimal("20.00"),
+                conversionRate = BigDecimal("0.2"),
+                timestamp = LocalDateTime.now(),
+            )
 
         every { currencyService.convertCurrency(any(), any(), any(), any()) } returns transaction
-
 
         // when + then
         mockMvc.post("/api/v1/currency/convert") {

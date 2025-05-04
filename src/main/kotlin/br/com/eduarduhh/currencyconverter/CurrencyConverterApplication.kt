@@ -12,5 +12,5 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 class CurrencyConverterApplication
 
 fun main(args: Array<String>) {
-	runApplication<CurrencyConverterApplication>(*args)
+    runApplication<CurrencyConverterApplication>(*args)
 }

@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/transaction")
 class TransactionController(
-    private val transactionService: TransactionService
+    private val transactionService: TransactionService,
 ) {
-
-   @GetMapping("{userId}")
-   fun findAllByUserId(@PathVariable userId: Long): ResponseEntity<List<Transaction>> {
+    @GetMapping("{userId}")
+    fun findAllByUserId(
+        @PathVariable userId: Long,
+    ): ResponseEntity<List<Transaction>> {
         val transactions = transactionService.findAllByUserId(userId)
         return ResponseEntity.ok(transactions)
     }

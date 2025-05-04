@@ -9,5 +9,5 @@ data class ApiError(
     val message: String?,
     val path: String,
     val errorType: String? = null,
-    val details: Map<String, String> = emptyMap()
+    val details: Map<String, String> = emptyMap(),
 )
