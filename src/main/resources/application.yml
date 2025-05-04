@@ -26,3 +26,8 @@ logging:
   level:
     root: INFO
     #br.com.eduarduhh: DEBUG
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
