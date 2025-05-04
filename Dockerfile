@@ -12,7 +12,7 @@ COPY src /app/src
 RUN gradle build --no-daemon --stacktrace -x test
 
 # Estágio de produção
-FROM eclipse-temurin:21-jre-alpine
+FROM azul/zulu-openjdk:21-jre
 
 WORKDIR /app
 COPY --from=builder /app/build/libs/*.jar /app/app.jar
