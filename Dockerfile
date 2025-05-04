@@ -1,27 +1,27 @@
-# Estágio de build com Corretto JDK
-FROM amazoncorretto:21-alpine-jdk AS builder
+# Etapa 1: build da aplicação com Gradle wrapper
+ FROM amazoncorretto:21-alpine-jdk AS builder
 
-WORKDIR /app
+ WORKDIR /app
 
-# Cache de dependências
-COPY build.gradle.kts settings.gradle.kts gradle.properties /app/
-COPY gradle /app/gradle
-RUN ./gradlew dependencies --no-daemon
+ # Copia os arquivos do projeto
+ COPY . .
 
-# Build da aplicação
-COPY src /app/src
-RUN ./gradlew build --no-daemon -x test
+ # Dá permissão ao Gradle wrapper (caso esteja sem execução)
+ RUN chmod +x ./gradlew
 
-# Estágio de produção com Corretto JRE
-FROM amazoncorretto:21-alpine-jre
+ # Executa o build, ignorando testes para produção
+ RUN ./gradlew clean build -x test -x check
 
-WORKDIR /app
+ # Etapa 2: imagem final, menor possível
+ FROM eclipse-temurin:21-jdk-alpine
 
-# Copia o JAR construído
-COPY --from=builder /app/build/libs/*.jar /app/app.jar
+ WORKDIR /app
 
-# Configurações recomendadas
-ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75"
-EXPOSE 8080
+ # Copia o JAR construído na etapa anterior
+ COPY --from=builder /app/build/libs/*.jar app.jar
 
-ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar /app/app.jar"]
+ # Expõe a porta padrão do Spring Boot
+ EXPOSE 8080
+
+ # Executa o JAR
+ ENTRYPOINT ["java", "-jar", "app.jar"]
