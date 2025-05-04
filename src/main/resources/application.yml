@@ -22,10 +22,7 @@ api:
   base: EUR
   key: ${API_KEY} # carregada do Railway ou .env
 
-logging:
-  level:
-    root: INFO
-    #br.com.eduarduhh: DEBUG
+
 springdoc:
   api-docs:
     enabled: true
