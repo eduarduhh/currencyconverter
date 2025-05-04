@@ -1,0 +1,33 @@
+name: CI/CD com Deploy Railway
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Configurar Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '21'
+
+      - name: Rodar ktlint
+        run: ./gradlew ktlintCheck
+
+      - name: Rodar testes
+        run: ./gradlew test
+
+      - name: Build do projeto
+        run: ./gradlew build
+
+      - name: Deploy no Railway
+        uses: railwayapp/cli-action@v1
+        with:
+          railwayToken: ${{ secrets.RAILWAY_TOKEN }}
