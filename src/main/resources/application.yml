@@ -26,11 +26,12 @@ api:
 
 springdoc:
   api-docs:
-    enabled: true
     path: /v3/api-docs
+    enabled: true
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
+    url: /v3/api-docs
     config-url: /v3/api-docs/swagger-config
-    disable-swagger-default-url: true
-    always-use-https: true # Importante para Railway
+    operations-sorter: alpha
+    tags-sorter: alpha
