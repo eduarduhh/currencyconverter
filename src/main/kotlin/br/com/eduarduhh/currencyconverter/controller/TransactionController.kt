@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/transaction")
+@RequestMapping("/api/v1/transaction")
 class TransactionController(
     private val transactionService: TransactionService
 ) {
