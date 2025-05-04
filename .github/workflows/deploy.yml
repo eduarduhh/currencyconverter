@@ -20,11 +20,11 @@ jobs:
           java-version: '21'
           cache: 'gradle'  # Habilita cache de dependências
 
-      - name: Rodar ktlint
-        run: ./gradlew ktlintCheck
-
       - name: Rodar testes
         run: ./gradlew test
 
       - name: Build do projeto
         run: ./gradlew build -x test  # Evita rodar testes novamente
+
+      - name: Rodar ktlint
+        run: ./gradlew ktlintCheck
