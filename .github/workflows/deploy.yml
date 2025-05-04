@@ -7,16 +7,18 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30  # Aumenta o timeout para builds maiores
 
     steps:
       - name: Checkout do código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # Atualizado para v4
 
       - name: Configurar Java
         uses: actions/setup-java@v3
         with:
           distribution: 'corretto'
           java-version: '21'
+          cache: 'gradle'  # Habilita cache de dependências
 
       - name: Rodar ktlint
         run: ./gradlew ktlintCheck
@@ -25,9 +27,12 @@ jobs:
         run: ./gradlew test
 
       - name: Build do projeto
-        run: ./gradlew build
+        run: ./gradlew build -x test  # Evita rodar testes novamente
 
       - name: Deploy no Railway
-        uses: railwayapp/railway-action@v1.2.5
+        uses: railwayapp/railway-action@v2.0.0  # Versão mais recente
         with:
-          railwayToken: ${{ secrets.RAILWAY_TOKEN }}
+          service: 'currencyconverter'  # Substitua pelo nome do seu serviço
+          environment: 'production'
+          token: ${{ secrets.RAILWAY_TOKEN }}  # Formato recomendado
+          # Opcional: waitForDeployment: true
