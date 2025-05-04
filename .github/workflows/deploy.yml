@@ -28,11 +28,3 @@ jobs:
 
       - name: Build do projeto
         run: ./gradlew build -x test  # Evita rodar testes novamente
-
-      - name: Deploy no Railway
-        uses: railwayapp/railway-action@v2.0.0  # Versão mais recente
-        with:
-          service: 'currencyconverter'  # Substitua pelo nome do seu serviço
-          environment: 'production'
-          token: ${{ secrets.RAILWAY_TOKEN }}  # Formato recomendado
-          # Opcional: waitForDeployment: true
