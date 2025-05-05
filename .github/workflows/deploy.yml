@@ -27,17 +27,17 @@ jobs:
         run: ./gradlew build -x test  # Evita rodar testes novamente
 
   deploy:
-    needs: build-and-deploy
     runs-on: ubuntu-latest
+    container: ghcr.io/railwayapp/cli:latest
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Instalar Railway CLI
-        run: curl -fsSL https://railway.app/install.sh | sh
+      - name: Linkar serviço Railway
+        run: railway link --service thriving-stillness
 
-      - name: Deploy com Railway
-        run: |
-          railway link --service thriving-stillness --token ${{ secrets.RAILWAY_TOKEN }}
-          railway up --token ${{ secrets.RAILWAY_TOKEN }}
+      - name: Deploy no Railway
+        run: railway up --token $RAILWAY_TOKEN
+
 
