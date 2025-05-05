@@ -1,41 +1,24 @@
-name: CI/CD com Deploy Railway
+name: Deploy em Produção
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-
-      - name: Configurar Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'corretto'
-          java-version: '21'
-          cache: 'gradle'
-
-      - name: Rodar testes
-        run: ./gradlew test
-
-      - name: Build do projeto
-        run: ./gradlew build -x test
-
   deploy:
     runs-on: ubuntu-latest
-    container: ghcr.io/railwayapp/cli:latest
-    env:
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Linkar serviço Railway
-        run: railway link --service thriving-stillness
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
 
       - name: Deploy no Railway
-        run: railway up --token $RAILWAY_TOKEN
+        uses: ayungavis/railway-preview-deploy@v1.0.2
+        with:
+          railway_api_token: ${{ secrets.RAILWAY_API_TOKEN }}
+          project_id: ${{ secrets.RAILWAY_PROJECT_ID }}
+          environment_name: 'production'
+          preview_environment_name: 'main'
+          environment_variables: '{}'
+          branch_name: ${{ github.ref_name }}
+          cleanup: 'false'
