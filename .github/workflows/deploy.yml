@@ -37,9 +37,7 @@ jobs:
         run: curl -fsSL https://railway.app/install.sh | sh
 
       - name: Deploy com Railway
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway link --service thriving-stillness
-          railway up
+          railway link --service thriving-stillness --token ${{ secrets.RAILWAY_TOKEN }}
+          railway up --token ${{ secrets.RAILWAY_TOKEN }}
 
