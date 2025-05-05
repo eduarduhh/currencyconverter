@@ -27,11 +27,12 @@ jobs:
         run: ./gradlew build -x test  # Evita rodar testes novamente
 
   deploy:
+    needs: build-and-deploy
     runs-on: ubuntu-latest
-    container: ghcr.io/railwayapp/cli:latest
-    env:
-      SVC_ID: thriving-stillness
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
       - uses: actions/checkout@v3
-      - run: railway up --service=${{ env.SVC_ID }}
+      - name: Railway Deploy
+        uses: railwayapp/railway-action@v1.2.5
+        with:
+          railwayToken: ${{ secrets.RAILWAY_TOKEN }}
+          serviceName: thriving-stillness
