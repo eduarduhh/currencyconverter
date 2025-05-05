@@ -52,7 +52,7 @@ class TransactionControllerTest {
         every { transactionService.findAllByUserId(1L) } returns transactions
 
         // when + then
-        mockMvc.get("/api/transaction/1") {
+        mockMvc.get("/api/v1/transaction/1") {
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk() }

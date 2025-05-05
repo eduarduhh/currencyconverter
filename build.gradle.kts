@@ -5,8 +5,6 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.jpa") version "1.9.25"
 
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.0"
-    id("io.gitlab.arturbosch.detekt") version "1.23.1"
 }
 
 group = "br.com.eduarduhh"
@@ -91,24 +89,3 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    // Suas outras dependências aqui
-}
-
-ktlint {
-    version.set("1.1.1")
-    android.set(false)
-    outputToConsole.set(true)
-    ignoreFailures.set(false)
-    reporters {
-        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
-        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
-    }
-}
-
-detekt {
-    buildUponDefaultConfig = true
-    allRules = false
-    config = files("config/detekt/detekt.yml")
-}
