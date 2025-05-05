@@ -7,35 +7,35 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 30  # Aumenta o timeout para builds maiores
+    timeout-minutes: 30
 
     steps:
       - name: Checkout do código
-        uses: actions/checkout@v4  # Atualizado para v4
+        uses: actions/checkout@v4
 
       - name: Configurar Java
         uses: actions/setup-java@v3
         with:
           distribution: 'corretto'
           java-version: '21'
-          cache: 'gradle'  # Habilita cache de dependências
+          cache: 'gradle'
 
       - name: Rodar testes
         run: ./gradlew test
 
       - name: Build do projeto
-        run: ./gradlew build -x test  # Evita rodar testes novamente
+        run: ./gradlew build -x test
 
-    deploy:
-      runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-deploy  # espera o job anterior terminar com sucesso
 
-      steps:
-        - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-        - name: Deploy to Railway
-          uses: railwayapp/cli-action@v1
-          with:
-            command: up
-          env:
-            RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
+      - name: Deploy to Railway
+        uses: railwayapp/cli-action@v1
+        with:
+          command: up
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
