@@ -25,17 +25,3 @@ jobs:
 
       - name: Build do projeto
         run: ./gradlew build -x test
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build-and-deploy  # espera o job anterior terminar com sucesso
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Deploy to Railway
-        uses: railwayapp/cli-action@v1
-        with:
-          command: up
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
