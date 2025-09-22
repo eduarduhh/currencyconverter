@@ -17,14 +17,14 @@ node {
                  //dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}", "--ulimit nofile=4096:65535 --memory=4g --dns 8.8.8.8 --dns 8.8.4.4 .")
           }
 
-          stage('Deploy docker'){
-                  echo "Docker Image Tag Name: ${dockerImageTag}"
-                  withCredentials([string(credentialsId: 'exchangerates-api-key', variable: 'API_KEY')]) {
-                      sh "echo 'API_KEY=\\${API_KEY}' > .env"
-                   }
-                  sh "docker run --name springboot-deploy -d -p 8081:8081 -e API_KEY=\${API_KEY}
-                  sh "docker stop springboot-deploy || true && docker rm springboot-deploy || true"
-                  sh "docker run --name springboot-deploy -d -p 8081:8080 springboot-deploy:${env.BUILD_NUMBER}"
+          stage('Deploy docker') {
+                      echo "Docker Image Tag Name: ${dockerImageTag}"
+                      withCredentials([string(credentialsId: 'exchangerates-api-key', variable: 'API_KEY')]) {
+                          sh "echo 'API_KEY=\${API_KEY}' > .env"
+                          sh "docker stop springboot-deploy || true && docker rm springboot-deploy || true"
+                          sh "docker run --name springboot-deploy -d -p 8081:8080 --env-file .env springboot-deploy:${env.BUILD_NUMBER}"
+                          sh "rm .env || true" // Limpa o arquivo .env para evitar exposição
+                      }
           }
     }catch(e){
 //         currentBuild.result = "FAILED"
