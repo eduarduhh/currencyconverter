@@ -16,7 +16,7 @@ RUN gradle clean build -x test -x check
 
 
 # Copia o JAR construído para o diretório de execução
-RUN cp /app/build/libs/*.jar app.jar
+RUN cp /app/build/libs/*SNAPSHOT.jar app.jar
 
 # Expõe a porta 8080 (usada pelo Spring Boot dentro do container)
 EXPOSE 8080
