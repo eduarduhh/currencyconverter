@@ -1,27 +1,22 @@
-# Etapa 1: build da aplicação com Gradle wrapper
- FROM amazoncorretto:21-alpine-jdk AS builder
+# Etapa única: build e execução com Amazon Corretto
+FROM amazoncorretto:21-alpine-jdk
 
- WORKDIR /app
+WORKDIR /app
 
- # Copia os arquivos do projeto
- COPY . .
+# Copia os arquivos do projeto
+COPY . .
 
- # Dá permissão ao Gradle wrapper (caso esteja sem execução)
- RUN chmod +x ./gradlew
+# Dá permissão ao Gradle wrapper (caso esteja sem execução)
+RUN chmod +x ./gradlew
 
- # Executa o build, ignorando testes para produção
- RUN ./gradlew clean build -x test -x check
+# Executa o build, ignorando testes para produção
+RUN ./gradlew clean build -x test -x check
 
- # Etapa 2: imagem final, menor possível
- FROM eclipse-temurin:21-jdk-alpine
+# Copia o JAR construído para o diretório de execução
+RUN cp /app/build/libs/*.jar app.jar
 
- WORKDIR /app
+# Expõe a porta 8080 (usada pelo Spring Boot dentro do container)
+EXPOSE 8080
 
- # Copia o JAR construído na etapa anterior
- COPY --from=builder /app/build/libs/*.jar app.jar
-
- # Expõe a porta padrão do Spring Boot
- EXPOSE 8080
-
- # Executa o JAR
- ENTRYPOINT ["java", "-jar", "app.jar"]
+# Executa o JAR
+ENTRYPOINT ["java", "-jar", "app.jar"]
