@@ -11,7 +11,9 @@ COPY . .
 RUN chmod +x ./gradlew
 
 # Executa o build, ignorando testes para produção
-RUN ./gradlew clean build -x test -x check
+#RUN ./gradlew clean build -x test -x check
+RUN gradle clean build -x test -x check
+
 
 # Copia o JAR construído para o diretório de execução
 RUN cp /app/build/libs/*.jar app.jar
