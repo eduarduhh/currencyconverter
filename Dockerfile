@@ -1,5 +1,6 @@
 # Etapa única: build e execução com Amazon Corretto
-FROM amazoncorretto:21-alpine-jdk
+#FROM amazoncorretto:21-alpine-jdk
+FROM gradle:jdk21-corretto
 
 WORKDIR /app
 
