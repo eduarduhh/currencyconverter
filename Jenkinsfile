@@ -23,8 +23,8 @@ node {
                           //sh "echo 'API_KEY=${API_KEY}' > .env"
                           sh 'echo "$API_KEY" > .env'
                           sh "docker stop springboot-deploy || true && docker rm springboot-deploy || true"
-                          sh "docker run --name springboot-deploy -d -p 8081:8080 --env-file .env springboot-deploy:${env.BUILD_NUMBER}"
-                          //sh "rm .env || true" // Limpa o arquivo .env para evitar exposição
+                          sh "docker run  --env-file .env --name springboot-deploy -d -p 8081:8080 --env-file .env springboot-deploy:${env.BUILD_NUMBER}"
+                          sh "rm .env || true" // Limpa o arquivo .env para evitar exposição
                       }
           }
     }catch(e){
