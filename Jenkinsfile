@@ -12,6 +12,7 @@ node {
           stage('Build docker') {
                 dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}", "--ulimit nofile=4096:65535 --memory=4g .")
           }
+
           stage('Deploy docker') {
                       echo "Docker Image Tag Name: ${dockerImageTag}"
                       withCredentials([string(credentialsId: 'exchangerates-api-key', variable: 'API_KEY')]) {
