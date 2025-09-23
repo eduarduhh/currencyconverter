@@ -20,7 +20,6 @@ node {
           stage('Deploy docker') {
                       echo "Docker Image Tag Name: ${dockerImageTag}"
                       withCredentials([string(credentialsId: 'exchangerates-api-key', variable: 'API_KEY')]) {
-                          //sh "echo 'API_KEY=${API_KEY}' > .env"
                           sh 'echo "$API_KEY" > .env'
                           sh "docker stop springboot-deploy || true && docker rm springboot-deploy || true"
                           sh "docker run  --env-file .env --name springboot-deploy -d -p 8081:8080 --env-file .env springboot-deploy:${env.BUILD_NUMBER}"
