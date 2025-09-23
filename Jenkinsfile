@@ -12,9 +12,7 @@ node {
                 branch: 'main'
          }
           stage('Build docker') {
-                 //dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}")
                 dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}", "--ulimit nofile=4096:65535 --memory=4g .")
-                 //dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}", "--ulimit nofile=4096:65535 --memory=4g --dns 8.8.8.8 --dns 8.8.4.4 .")
           }
 
           stage('Deploy docker') {
