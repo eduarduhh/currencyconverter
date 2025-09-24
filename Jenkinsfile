@@ -9,14 +9,19 @@ node {
                // credentialsId: 'springdeploy-user',
                 branch: 'main'
          }
-         stage('Get Project Version') {
-                     // Extrai a versão do build.gradle.kts
-                     script {
-                         projectVersion = sh(script: "grep 'version =' build.gradle.kts | awk '{print \$3}' | tr -d '\"'", returnStdout: true).trim()
-                         echo "Versão do projeto: ${projectVersion}"
-                         env.PROJECT_VERSION = projectVersion // Armazena para uso posterior
-                     }
-                 }
+       stage('Get Project Version') {
+           steps {
+               script {
+                   projectVersion = sh(script: "./gradlew properties --no-daemon --console=plain -q | grep '^version:' | awk '{print \$2}'", returnStdout: true).trim()
+                   if (projectVersion) {
+                       echo "Versão do projeto: ${projectVersion}"
+                       env.PROJECT_VERSION = projectVersion
+                   } else {
+                       error "Não foi possível encontrar a versão no build.gradle.kts"
+                   }
+               }
+           }
+       }
 
 
           stage('Build docker') {
