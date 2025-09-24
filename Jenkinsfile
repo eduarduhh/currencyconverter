@@ -21,7 +21,7 @@ node {
             }
 }
           stage('Build docker') {
-                dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}", "--ulimit nofile=4096:65535 --memory=4g .")
+                dockerImage = docker.build("springboot-deploy:${env.PROJECT_VERSION}", "--ulimit nofile=4096:65535 --memory=4g .")
           }
 
           stage('Deploy docker') {
@@ -29,7 +29,7 @@ node {
                       withCredentials([string(credentialsId: 'exchangerates-api-key', variable: 'API_KEY')]) {
                           sh 'echo API_KEY="$API_KEY" > .env'
                           sh "docker stop springboot-deploy || true && docker rm springboot-deploy || true"
-                          sh "docker run  --env-file .env --name springboot-deploy -d -p 8081:8080 --env-file .env springboot-deploy:${env.BUILD_NUMBER}"
+                          sh "docker run  --env-file .env --name springboot-deploy -d -p 8081:8080 --env-file .env springboot-deploy:${env.PROJECT_VERSION}"
                           sh "rm .env || true" // Limpa o arquivo .env para evitar exposição
                       }
           }
