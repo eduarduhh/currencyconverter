@@ -10,10 +10,12 @@ node {
                 branch: 'main'
          }
          stage('Get Project Version') {
-                     // Extrai a versão do build.gradle
-                     projectVersion = sh(script: "grep 'version =' build.gradle.kts | awk '{print \$3}' | tr -d '\"'", returnStdout: true).trim()
-                     echo "Versão do projeto: ${projectVersion}"
-                     env.PROJECT_VERSION = projectVersion // Armazena para uso posterior
+                     // Extrai a versão do build.gradle.kts
+                     script {
+                         projectVersion = sh(script: "grep 'version =' build.gradle.kts | awk '{print \$3}' | tr -d '\"'", returnStdout: true).trim()
+                         echo "Versão do projeto: ${projectVersion}"
+                         env.PROJECT_VERSION = projectVersion // Armazena para uso posterior
+                     }
                  }
 
 
