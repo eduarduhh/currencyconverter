@@ -9,23 +9,6 @@ node {
                // credentialsId: 'springdeploy-user',
                 branch: 'main'
          }
-             stage('Get Project Version') {
-                 steps {
-                     script {
-                         // Execute Gradle task and capture output
-                         sh './gradlew -q projectDetails > build-env.properties'
-
-                         // Read properties into environment variables
-                         def props = readProperties file: 'build-env.properties'
-                         env.PROJECT_NAME = props.PROJECT_NAME
-                         env.PROJECT_VERSION = props.PROJECT_VERSION
-                     }
-                     echo "Project Name: ${env.PROJECT_NAME}"
-                     echo "Project Version: ${env.PROJECT_VERSION}"
-                 }
-             }
-
-
 
           stage('Build docker') {
                 dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}", "--ulimit nofile=4096:65535 --memory=4g .")
