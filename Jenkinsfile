@@ -9,6 +9,20 @@ node {
                // credentialsId: 'springdeploy-user',
                 branch: 'main'
          }
+         stage('Get Project Version') {
+                     steps {
+                         script {
+                             // Extrai a versão do build.gradle.kts
+                             projectVersion = sh(script: "grep '^version\\s*=' build.gradle.kts | awk -F'[= ]+' '{print \$2}' | tr -d '\"\\''", returnStdout: true).trim()
+                             if (projectVersion) {
+                                 echo "Versão do projeto: ${projectVersion}"
+                                 env.PROJECT_VERSION = projectVersion
+                             } else {
+                                 error "Não foi possível encontrar a versão no build.gradle.kts"
+                             }
+                         }
+                     }
+                 }
 
           stage('Build docker') {
                 dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}", "--ulimit nofile=4096:65535 --memory=4g .")
