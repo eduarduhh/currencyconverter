@@ -2,36 +2,39 @@ node {
     def WORKSPACE = "/var/lib/jenkins/workspace/springboot-deploy"
     def dockerImageTag = "springboot-deploy${env.BUILD_NUMBER}"
     try{
-         stage('Clone Repo') {
-            // for display purposes
-            // Get some code from a GitHub repository
-            git url: 'https://github.com/eduarduhh/currencyconverter.git',
-               // credentialsId: 'springdeploy-user',
-                branch: 'main'
-         }
+        stages{
 
-        stage('Get Project Version') {
-            script {
-                def gradleVersion = sh(
-                    script: "grep '^version' build.gradle.kts | head -1 | cut -d '\"' -f2",
-                    returnStdout: true
-                ).trim()
-                echo "📦 Project Version: ${gradleVersion}"
-                env.PROJECT_VERSION = gradleVersion
-            }
-}
-          stage('Build docker') {
-                dockerImage = docker.build("springboot-deploy:${env.PROJECT_VERSION}", "--ulimit nofile=4096:65535 --memory=4g .")
-          }
+             stage('Clone Repo') {
+                // for display purposes
+                // Get some code from a GitHub repository
+                git url: 'https://github.com/eduarduhh/currencyconverter.git',
+                   // credentialsId: 'springdeploy-user',
+                    branch: 'main'
+             }
 
-          stage('Deploy docker') {
-                      echo "Docker Image Tag Name: ${dockerImageTag}"
-                      withCredentials([string(credentialsId: 'exchangerates-api-key', variable: 'API_KEY')]) {
-                          sh 'echo API_KEY="$API_KEY" > .env'
-                          sh "docker stop springboot-deploy || true && docker rm springboot-deploy || true"
-                          sh "docker run  --env-file .env --name springboot-deploy -d -p 8081:8080 --env-file .env springboot-deploy:${env.PROJECT_VERSION}"
-                          sh "rm .env || true" // Limpa o arquivo .env para evitar exposição
-                      }
+              stage('Get Project Version') {
+                    script {
+                        def gradleVersion = sh(
+                            script: "grep '^version' build.gradle.kts | head -1 | cut -d '\"' -f2",
+                            returnStdout: true
+                        ).trim()
+                        echo "📦 Project Version: ${gradleVersion}"
+                        env.PROJECT_VERSION = gradleVersion
+                    }
+                }
+              stage('Build docker') {
+                    dockerImage = docker.build("springboot-deploy:${env.PROJECT_VERSION}", "--ulimit nofile=4096:65535 --memory=4g .")
+              }
+
+              stage('Deploy docker') {
+                          echo "Docker Image Tag Name: ${dockerImageTag}"
+                          withCredentials([string(credentialsId: 'exchangerates-api-key', variable: 'API_KEY')]) {
+                              sh 'echo API_KEY="$API_KEY" > .env'
+                              sh "docker stop springboot-deploy || true && docker rm springboot-deploy || true"
+                              sh "docker run  --env-file .env --name springboot-deploy -d -p 8081:8080 --env-file .env springboot-deploy:${env.PROJECT_VERSION}"
+                              sh "rm .env || true" // Limpa o arquivo .env para evitar exposição
+                          }
+              }
           }
     }catch(e){
 //         currentBuild.result = "FAILED"
