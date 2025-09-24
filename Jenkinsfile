@@ -9,6 +9,14 @@ node {
                // credentialsId: 'springdeploy-user',
                 branch: 'main'
          }
+         stage('Get Project Version') {
+                     // Extrai a versão do build.gradle
+                     projectVersion = sh(script: "grep 'version =' build.gradle | awk '{print \$3}' | tr -d '\"'", returnStdout: true).trim()
+                     echo "Versão do projeto: ${projectVersion}"
+                     env.PROJECT_VERSION = projectVersion // Armazena para uso posterior
+                 }
+
+
           stage('Build docker') {
                 dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}", "--ulimit nofile=4096:65535 --memory=4g .")
           }
