@@ -1,71 +1,74 @@
-node {
-    def WORKSPACE = "/var/lib/jenkins/workspace/springboot-deploy"
-    def dockerImageTag = "springboot-deploy${env.BUILD_NUMBER}"
-    try{
-        stages {
-
-             stage('Clone Repo') {
-                // for display purposes
-                // Get some code from a GitHub repository
+pipeline {
+    agent any
+    environment {
+        DOCKER_IMAGE_TAG = "springboot-deploy:${env.BUILD_NUMBER}"
+        PROJECT_VERSION = ''
+    }
+    stages {
+        stage('Clone Repo') {
+            steps {
                 git url: 'https://github.com/eduarduhh/currencyconverter.git',
-                   // credentialsId: 'springdeploy-user',
+                    // credentialsId: 'springdeploy-user', // Uncomment if credentials are needed
                     branch: 'main'
-             }
-
-              stage('Get Project Version') {
-                    script {
-                        def gradleVersion = sh(
-                            script: "grep '^version' build.gradle.kts | head -1 | cut -d '\"' -f2",
-                            returnStdout: true
-                        ).trim()
-                        echo "📦 Project Version: ${gradleVersion}"
-                        env.PROJECT_VERSION = gradleVersion
-                    }
+            }
+        }
+        stage('Get Project Version') {
+            steps {
+                script {
+                    PROJECT_VERSION = sh(
+                        script: "grep '^version' build.gradle.kts | head -1 | cut -d '\"' -f2",
+                        returnStdout: true
+                    ).trim()
+                    echo "📦 Project Version: ${PROJECT_VERSION}"
                 }
-              stage('Build docker') {
-                    dockerImage = docker.build("springboot-deploy:${env.PROJECT_VERSION}", "--ulimit nofile=4096:65535 --memory=4g .")
-              }
-
-              stage('Deploy docker') {
-                          echo "Docker Image Tag Name: ${dockerImageTag}"
-                          withCredentials([string(credentialsId: 'exchangerates-api-key', variable: 'API_KEY')]) {
-                              sh 'echo API_KEY="$API_KEY" > .env'
-                              sh "docker stop springboot-deploy || true && docker rm springboot-deploy || true"
-                              sh "docker run  --env-file .env --name springboot-deploy -d -p 8081:8080 --env-file .env springboot-deploy:${env.PROJECT_VERSION}"
-                              sh "rm .env || true" // Limpa o arquivo .env para evitar exposição
-                          }
-              }
-          }
-    }catch(e){
-//         currentBuild.result = "FAILED"
-        throw e
-    }finally{
-//         notifyBuild(currentBuild.result)
+            }
+        }
+        stage('Build Docker') {
+            steps {
+                script {
+                    dockerImage = docker.build("springboot-deploy:${PROJECT_VERSION}", "--ulimit nofile=4096:65535 --memory=4g .")
+                }
+            }
+        }
+        stage('Deploy Docker') {
+            steps {
+                withCredentials([string(credentialsId: 'exchangerates-api-key', variable: 'API_KEY')]) {
+                    sh 'echo API_KEY="$API_KEY" > .env'
+                    sh 'docker stop springboot-deploy || true && docker rm springboot-deploy || true'
+                    sh "docker run --env-file .env --name springboot-deploy -d -p 8081:8080 springboot-deploy:${PROJECT_VERSION}"
+                    sh 'rm .env || true'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            notifyBuild(currentBuild.result)
+        }
+        failure {
+            script {
+                currentBuild.result = 'FAILED'
+            }
+        }
     }
 }
 
-def notifyBuild(String buildStatus = 'STARTED'){
+def notifyBuild(String buildStatus = 'STARTED') {
+    buildStatus = buildStatus ?: 'SUCCESSFUL'
+    def colorName = 'RED'
+    def colorCode = '#FF0000'
+    def now = new Date()
+    def subject = "${buildStatus}, Job: ${env.JOB_NAME} FRONTEND - Deployment Sequence: [${env.BUILD_NUMBER}]"
+    def summary = "${subject} - Check On: (${env.BUILD_URL}) - Time: ${now}"
+    def subject_email = "Spring Boot Deployment"
+    def details = """<p>${buildStatus} JOB </p>
+        <p>Job: ${env.JOB_NAME} - Deployment Sequence: [${env.BUILD_NUMBER}] - Time: ${now}</p>
+        <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME}</a>"</p>"""
 
-// build status of null means successful
-  buildStatus =  buildStatus ?: 'SUCCESSFUL'
-  // Default values
-  def colorName = 'RED'
-  def colorCode = '#FF0000'
-  def now = new Date()
-  // message
-  def subject = "${buildStatus}, Job: ${env.JOB_NAME} FRONTEND - Deployment Sequence: [${env.BUILD_NUMBER}] "
-  def summary = "${subject} - Check On: (${env.BUILD_URL}) - Time: ${now}"
-  def subject_email = "Spring boot Deployment"
-  def details = """<p>${buildStatus} JOB </p>
-    <p>Job: ${env.JOB_NAME} - Deployment Sequence: [${env.BUILD_NUMBER}] - Time: ${now}</p>
-    <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME}</a>"</p>"""
-
-
-  // Email notification
     emailext (
-         to: "admin@gmail.com",
-         subject: subject_email,
-         body: details,
-         recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-       )
+        to: "admin@gmail.com", // Replace with actual email
+        subject: subject_email,
+        body: details,
+        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+    )
 }
