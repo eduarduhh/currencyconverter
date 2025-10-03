@@ -20,5 +20,6 @@ RUN cp /app/build/libs/*SNAPSHOT.jar app.jar
 
 # Expõe a porta 8080 (usada pelo Spring Boot dentro do container)
 EXPOSE 8080
+
 # Executa o JAR
 ENTRYPOINT ["java", "-jar", "app.jar"]
