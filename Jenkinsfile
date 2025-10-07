@@ -26,7 +26,7 @@ pipeline {
         stage('Build Docker') {
             steps {
                 script {
-                    sh "docker buildx build -t springboot-deploy:${PROJECT_VERSION} --ulimit nofile=4096:65535 --memory=4g "
+                    sh "docker buildx build -t springboot-deploy:${PROJECT_VERSION} --ulimit nofile=4096:65535 --memory=4g . "
                     //dockerImage = docker.build("springboot-deploy:${PROJECT_VERSION}", "--ulimit nofile=4096:65535 --memory=4g .")
                 }
             }
