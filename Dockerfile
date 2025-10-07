@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Dá permissão ao Gradle wrapper (caso esteja sem execução)
-RUN chmod +x ./gradlew
+#RUN chmod +x ./gradlew
 
 # Executa o build, ignorando testes para produção
 #RUN ./gradlew clean build -x test -x check
